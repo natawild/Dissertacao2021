@@ -1,0 +1,12 @@
+name: Diamonds
+title: Diamonds
+username:
+account: celianlfg
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1811710
+bundleId: 2800582
+url: https://celianlfg.shinyapps.io/Diamonds/
+when: 1581678145.04131
+asMultiple: FALSE
+asStatic: FALSE
