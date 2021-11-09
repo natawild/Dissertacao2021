@@ -22,7 +22,7 @@ When you click the **Knit** button a document will be generated that includes bo
 Inicio de análise aos dados. 
 
 ```{r cars}
-DadosAposRevisao <- read_excel("DadosAposRevisao.xlsx")
+DadosAposRevisao <- read_excel("DadosAposRevisao.xlsx", n_max = 435)
 View(DadosAposRevisao)   
 attach(DadosAposRevisao)
 vis_miss(DadosAposRevisao, warn_large_data = FALSE)
@@ -36,8 +36,18 @@ You can also embed plots, for example:
 ```{r pressure, echo=FALSE}
 plot_intro(DadosAposRevisao)
 plot_missing(DadosAposRevisao) + theme_bw() + ggtitle("Percentagem de valores omissos")
-
+plot(DadosAposRevisao$Glicose,DadosAposRevisao$ResultDelirium)
 
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r pressure, echo=FALSE}
+plot_intro(DadosAposRevisao)
+plot_missing(DadosAposRevisao) + theme_bw() + ggtitle("Percentagem de valores omissos")
+
+```
+
+
+
+
