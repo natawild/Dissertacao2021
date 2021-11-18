@@ -5,8 +5,85 @@ library(ggplot2)
 library(dplyr)
 library(DataExplorer)
 library(corrplot)
+library(gmodels)
+library(randomForest)
+library(MASS)
 
 
+#Dados iniciais 
+
+library(readxl)
+BD_amostra_511_final <- read_excel("BD_amostra_511_final.xlsx")
+View(BD_amostra_511_final)
+attach(BD_amostra_511_final)
+
+
+# Tranformação em factor: 
+BD_amostra_511_final$Genero <- factor(BD_amostra_511_final$Genero, label = c("M", "F"), levels = c(0, 1))
+
+BD_amostra_511_final$Rosuvastatina <- factor(BD_amostra_511_final$Rosuvastatina, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Atorvastatina <- factor(BD_amostra_511_final$Atorvastatina, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Pravastatina <- factor(BD_amostra_511_final$Pravastatina, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Sinvastatina <- factor(BD_amostra_511_final$Sinvastatina, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Fluvastatina <- factor(BD_amostra_511_final$Fluvastatina, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Alprazolam <- factor(BD_amostra_511_final$Alprazolam, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Captopril <- factor(BD_amostra_511_final$Captopril, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Desloratadine <- factor(BD_amostra_511_final$Desloratadine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Diazepam <- factor(BD_amostra_511_final$Diazepam, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Lorazepam <- factor(BD_amostra_511_final$Lorazepam, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Digoxin <- factor(BD_amostra_511_final$Digoxin, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Dipyridamole <- factor(BD_amostra_511_final$Dipyridamole, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Furosemide <- factor(BD_amostra_511_final$Furosemide, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Fluvoxamine <- factor(BD_amostra_511_final$Fluvoxamine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Haloperidol <- factor(BD_amostra_511_final$Haloperidol, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Hydrocortisone <- factor(BD_amostra_511_final$Hydrocortisone, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Iloperidone <- factor(BD_amostra_511_final$Iloperidone, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Morphine <- factor(BD_amostra_511_final$Morphine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Nifedipine <- factor(BD_amostra_511_final$Nifedipine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Paliperidone <- factor(BD_amostra_511_final$Paliperidone, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Prednisone <- factor(BD_amostra_511_final$Prednisone, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Ranitidine <- factor(BD_amostra_511_final$Ranitidine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Risperidone <- factor(BD_amostra_511_final$Risperidone, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Trazodone <- factor(BD_amostra_511_final$Trazodone, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Venlafaxine <- factor(BD_amostra_511_final$Venlafaxine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Warfarin <- factor(BD_amostra_511_final$Warfarin, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Amitriptyline <- factor(BD_amostra_511_final$Amitriptyline, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Hydroxyzine <- factor(BD_amostra_511_final$Hydroxyzine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Paroxetine <- factor(BD_amostra_511_final$Paroxetine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Quetiapine <- factor(BD_amostra_511_final$Quetiapine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Scopolamine <- factor(BD_amostra_511_final$Scopolamine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Trihexyphenidyl <- factor(BD_amostra_511_final$Trihexyphenidyl, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Clonidine <- factor(BD_amostra_511_final$Clonidine, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Sertralina <- factor(BD_amostra_511_final$Sertralina, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Tramadol <- factor(BD_amostra_511_final$Tramadol, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Mexazolam <- factor(BD_amostra_511_final$Mexazolam, label = c("N", "S"), levels = c(0, 1))
+BD_amostra_511_final$Trospium <- factor(BD_amostra_511_final$Trospium, label = c("N", "S"), levels = c(0, 1))
+
+# Transformação de data de óbito em factor:
+BD_amostra_511_final$Obito <- factor(BD_amostra_511_final$Obito, label = c("N", "S"), levels = c(0, 1))
+
+# Transformação de alcoolico em factor:
+BD_amostra_511_final$Alcoolico <- factor(BD_amostra_511_final$Alcoolico, label = c("N", "S"), levels = c(0, 1))
+
+# Transformação do resultado de delirium para factor:
+BD_amostra_511_final$ResultDelirium <- factor(BD_amostra_511_final$ResultDelirium, label = c("Sem delirium", "Delirium"), levels = c(0, 1))
+
+
+
+# Transformando Grupo de diagnostico em factor:
+BD_amostra_511_final$GrupoDiagn <- factor(BD_amostra_511_final$GrupoDiagn,
+                                      label = c("Neurologico", "Cardiovascular", "Gastrointestinal", "Respiratório", "Genitourinário", "Musculoesquelético", "Toxicidade de Drogas", "Outro", "Hemato-Oncológico"),
+                                      levels = 0:8)
+
+
+
+plot_missing(BD_amostra_511_final) + theme_bw() + ggtitle("Percentagem de valores omissos")
+
+
+
+
+
+#Dados
 DadosAposRevisao <- read_excel("DadosAposRevisao.xlsx", n_max = 435)
 attach(DadosAposRevisao)
 
@@ -57,7 +134,6 @@ DadosAposRevisao$Obito <- factor(DadosAposRevisao$Obito, label = c("N", "S"), le
 # Transformação de alcoolico em factor:
 DadosAposRevisao$Alcoolico <- factor(DadosAposRevisao$Alcoolico, label = c("N", "S"), levels = c(0, 1))
 
-
 # Transformação do resultado de delirium para factor:
 DadosAposRevisao$ResultDelirium <- factor(DadosAposRevisao$ResultDelirium, label = c("Sem delirium", "Delirium"), levels = c(0, 1))
 
@@ -68,10 +144,14 @@ DadosAposRevisao$GrupoDiagn <- factor(DadosAposRevisao$GrupoDiagn,
                                   label = c("Neurologico", "Cardiovascular", "Gastrointestinal", "Respiratório", "Genitourinário", "Musculoesquelético", "Toxicidade de Drogas", "Outro", "Hemato-Oncológico"),
                                   levels = 0:8)
 
+table(DadosAposRevisao$ResultDelirium)
+summary(dados)
+
+CrossTable(DadosAposRevisao,DadosAposRevisao)
+
 vis_dat(DadosAposRevisao)
 vis_miss(DadosAposRevisao, warn_large_data= FALSE)
 
-create_report(DadosAposRevisao)
 create_report(DadosAposRevisao, y= 'ResultDelirium')
 introduce(DadosAposRevisao)
 plot_intro(DadosAposRevisao)
@@ -113,10 +193,6 @@ table(dados$ResultDelirium)
 summary(dados)
 
 
-# Passo 4: Verificação das categorias de referência
-
-levels(dados$ResultDelirium)  # Não = categoria de referência
-
 
 
 # Passo 5: Verificação dos pressupostos
@@ -137,7 +213,6 @@ mod <- glm(ResultDelirium ~ Idade + Genero + Interna_Dias + GrupoDiagn + Glicose
 
 
 ## 3. Ausência de outliers/ pontos de alavancagem
-
 plot(mod, which = 5)
 
 
