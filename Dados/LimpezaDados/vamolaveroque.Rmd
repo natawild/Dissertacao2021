@@ -22,7 +22,7 @@ When you click the **Knit** button a document will be generated that includes bo
 Inicio de análise aos dados. 
 
 ```{r cars}
-DadosAposRevisao <- read_excel("DadosAposRevisao.xlsx", n_max = 435)
+DadosAposRevisao <- read_excel("DadosAposRevisaoSemGasometria.xlsx", n_max = 435)
 View(DadosAposRevisao)   
 attach(DadosAposRevisao)
 vis_miss(DadosAposRevisao, warn_large_data = FALSE)
